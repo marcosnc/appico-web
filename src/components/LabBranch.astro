@@ -1,117 +1,43 @@
 ---
 /**
- * Lab Branch — signature graphic shared across the site.
- * One trunk, five branches. Optionally emphasize a single active line.
+ * Lab mark — the Appico logo itself.
+ * Same illuminate animation everywhere; only `variant` changes size.
  */
+import logoSvg from '../assets/appico-logo-animated.svg?raw';
+
 interface Props {
-  /** Which branch to emphasize (0–4), or null for all equal / home */
-  activeIndex?: number | null;
-  /** Visual weight: hero atmosphere vs compact mark */
   variant?: 'hero' | 'compact' | 'mark';
   class?: string;
-  /** Accessible label; decorative if omitted */
   label?: string;
 }
 
 const {
-  activeIndex = null,
   variant = 'compact',
   class: className = '',
   label,
 } = Astro.props;
 
-const accentByIndex = [
-  'var(--color-brand-cyan)',
-  'var(--color-brand-teal)',
-  'var(--color-brand-mint)',
-  'var(--color-brand-navy)',
-  'var(--color-brand-ink)',
-] as const;
-
-const sizeClass =
+const shellClass =
   variant === 'hero'
-    ? 'w-full max-w-xl'
+    ? 'w-full max-w-md sm:max-w-lg lg:max-w-xl'
     : variant === 'mark'
-      ? 'w-10 h-10'
-      : 'w-full max-w-xs';
+      ? 'w-16 h-16'
+      : 'w-full max-w-xs sm:max-w-sm';
 ---
 
-<svg
-  class:list={[sizeClass, className]}
-  viewBox="0 0 320 220"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
-  role={label ? 'img' : 'presentation'}
-  aria-hidden={label ? undefined : 'true'}
+<div
+  class:list={['lab-mark relative', shellClass, className]}
+  role={label ? 'img' : undefined}
   aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
 >
-  {label && <title>{label}</title>}
-  {/* Trunk */}
-  <path
-    class="lab-branch-path"
-    d="M160 210 V95"
-    stroke="var(--color-brand-navy)"
-    stroke-width="3.5"
-    stroke-linecap="round"
-  />
-  {/* Five branches — Synapse, Mind, Sense, Flow, Chain */}
   {
-    [
-      { d: 'M160 95 C140 85, 100 70, 48 42', i: 0 },
-      { d: 'M160 95 C148 78, 130 55, 110 22', i: 1 },
-      { d: 'M160 95 C160 78, 160 50, 160 18', i: 2 },
-      { d: 'M160 95 C172 78, 190 55, 210 22', i: 3 },
-      { d: 'M160 95 C180 85, 220 70, 272 42', i: 4 },
-    ].map(({ d, i }) => {
-      const isActive = activeIndex === null || activeIndex === i;
-      const stroke =
-        activeIndex === null
-          ? accentByIndex[i]
-          : isActive
-            ? accentByIndex[i]
-            : 'var(--color-ink-muted)';
-      const opacity = activeIndex !== null && !isActive ? 0.28 : 1;
-      const width = activeIndex !== null && isActive ? 4 : 2.75;
-      return (
-        <path
-          class="lab-branch-path"
-          d={d}
-          stroke={stroke}
-          stroke-width={width}
-          stroke-linecap="round"
-          opacity={opacity}
-          style={`animation-delay: ${0.08 * (i + 1)}s`}
-        />
-      );
-    })
+    variant !== 'mark' && (
+      <div
+        class="lab-glow pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(79,216,203,0.4)_0%,rgba(56,172,172,0.18)_45%,transparent_70%)]"
+        aria-hidden="true"
+      />
+    )
   }
-  {/* Nodes at tips */}
-  {
-    [
-      [48, 42, 0],
-      [110, 22, 1],
-      [160, 18, 2],
-      [210, 22, 3],
-      [272, 42, 4],
-    ].map(([x, y, i]) => {
-      const isActive = activeIndex === null || activeIndex === i;
-      const fill =
-        activeIndex === null
-          ? accentByIndex[i as number]
-          : isActive
-            ? accentByIndex[i as number]
-            : 'var(--color-ink-muted)';
-      const opacity = activeIndex !== null && !isActive ? 0.28 : 1;
-      return (
-        <circle
-          cx={x}
-          cy={y}
-          r={activeIndex !== null && isActive ? 5.5 : 4}
-          fill={fill}
-          opacity={opacity}
-        />
-      );
-    })
-  }
-  <circle cx="160" cy="95" r="5" fill="var(--color-brand-navy)" />
-</svg>
+  <div class="lab-logo relative w-full drop-shadow-[0_10px_32px_rgba(36,131,140,0.22)]" set:html={logoSvg} />
+</div>

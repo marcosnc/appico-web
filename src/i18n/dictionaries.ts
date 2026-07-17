@@ -531,7 +531,7 @@ const es: Dictionary = {
     navigation: 'Navegación',
     contact: 'Contacto',
     rights: 'Todos los derechos reservados.',
-    emailPlaceholder: 'hola@appico.net',
+    emailPlaceholder: 'marcosnc@gmail.com',
   },
   businessLines: businessLinesEs,
 };
@@ -613,7 +613,7 @@ const en: Dictionary = {
     navigation: 'Navigation',
     contact: 'Contact',
     rights: 'All rights reserved.',
-    emailPlaceholder: 'hello@appico.net',
+    emailPlaceholder: 'marcosnc@gmail.com',
   },
   businessLines: businessLinesEn,
 };

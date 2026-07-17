@@ -13,16 +13,22 @@ const dict = getDictionary(locale);
 const contactHref = getLocalizedPath(locale, 'contact');
 ---
 
-<section class="border-b border-brand-navy/10 bg-surface-muted">
-  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <div class="grid items-start gap-10 lg:grid-cols-[1fr_auto]">
+<section class="relative overflow-hidden border-b border-brand-cyan/15 bg-surface-muted">
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_90%_20%,rgba(79,216,203,0.2),transparent_45%)]"
+    aria-hidden="true"
+  />
+  <div class="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <div class="grid items-center gap-10 lg:grid-cols-2">
       <div class="max-w-2xl">
         <h1 class="font-display text-4xl font-bold text-brand-navy sm:text-5xl">
           {dict.about.heading}
         </h1>
         <p class="mt-6 text-lg leading-relaxed text-ink-muted">{dict.about.intro}</p>
       </div>
-      <LabBranch variant="compact" class="hidden sm:block" />
+      <div class="hidden justify-center sm:flex lg:justify-end">
+        <LabBranch variant="compact" />
+      </div>
     </div>
   </div>
 </section>
@@ -42,7 +48,7 @@ const contactHref = getLocalizedPath(locale, 'contact');
     <p class="mt-4 max-w-3xl text-ink-muted">{dict.about.linesLead}</p>
     <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        dict.businessLines.map((line, index) => (
+        dict.businessLines.map((line) => (
           <li class="border-l-2 border-brand-cyan/60 pl-4">
             <a
               href={getLocalizedPath(locale, line.slug)}
@@ -51,11 +57,7 @@ const contactHref = getLocalizedPath(locale, 'contact');
               {line.name}
             </a>
             <p class="mt-2 text-sm text-ink-muted">{line.focus}</p>
-            <LabBranch
-              activeIndex={index}
-              variant="mark"
-              class="mt-4 opacity-80"
-            />
+            <LabBranch variant="mark" class="mt-4 opacity-80" />
           </li>
         ))
       }

@@ -13,15 +13,12 @@ interface Props {
 const { locale, slug } = Astro.props;
 const line = getBusinessLine(locale, slug);
 
-const lineOrder: BusinessLineSlug[] = ['synapse', 'mind', 'sense', 'flow', 'chain'];
-const activeIndex = lineOrder.indexOf(slug);
-
 const accentHeroBg: Record<typeof line.accent, string> = {
-  cyan: 'from-brand-cyan/15 via-surface-muted to-surface',
-  teal: 'from-brand-teal/15 via-surface-muted to-surface',
-  mint: 'from-brand-mint/20 via-surface-muted to-surface',
-  navy: 'from-brand-navy/10 via-surface-muted to-surface',
-  ink: 'from-brand-ink/10 via-surface-muted to-surface',
+  cyan: 'from-brand-cyan/25 via-[#e8f7f6] to-surface',
+  teal: 'from-brand-teal/22 via-[#e8f5f4] to-surface',
+  mint: 'from-brand-mint/30 via-[#eafaf7] to-surface',
+  navy: 'from-brand-navy/15 via-[#e8eef4] to-surface',
+  ink: 'from-brand-ink/12 via-[#eee8f2] to-surface',
 };
 
 const accentName: Record<typeof line.accent, string> = {
@@ -35,8 +32,12 @@ const accentName: Record<typeof line.accent, string> = {
 const contactHref = `${getLocalizedPath(locale, 'contact')}?${locale === 'es' ? 'linea' : 'line'}=${slug}`;
 ---
 
-<section class:list={['border-b border-brand-navy/10 bg-gradient-to-b', accentHeroBg[line.accent]]}>
-  <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1fr_auto] lg:px-8">
+<section class:list={['relative overflow-hidden border-b border-brand-cyan/15 bg-gradient-to-b', accentHeroBg[line.accent]]}>
+  <div
+    class="pointer-events-none absolute -right-10 top-10 h-48 w-48 rounded-full bg-brand-mint/20 blur-3xl"
+    aria-hidden="true"
+  />
+  <div class="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 sm:py-16 lg:grid-cols-2 lg:px-8 lg:py-20">
     <div class="max-w-2xl">
       <p class:list={['font-display text-sm font-semibold tracking-[0.18em] uppercase', accentName[line.accent]]}>
         {line.name}
@@ -46,7 +47,9 @@ const contactHref = `${getLocalizedPath(locale, 'contact')}?${locale === 'es' ? 
       </h1>
       <p class="mt-5 text-lg leading-relaxed text-ink-muted">{line.lead}</p>
     </div>
-    <LabBranch activeIndex={activeIndex} variant="compact" />
+    <div class="flex justify-center lg:justify-end">
+      <LabBranch variant="compact" />
+    </div>
   </div>
 </section>
 
