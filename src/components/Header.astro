@@ -1,0 +1,104 @@
+---
+import type { Locale } from '../i18n/config';
+import { getDictionary } from '../i18n/dictionaries';
+import { getLocalizedPath, switchLocalePath } from '../i18n/paths';
+import MobileNav from './react/MobileNav';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = getDictionary(locale);
+const pathname = Astro.url.pathname;
+
+const lineLinks = dict.businessLines.map((line) => ({
+  href: getLocalizedPath(locale, line.slug),
+  label: line.name,
+}));
+
+const secondaryLinks = [
+  { href: getLocalizedPath(locale, 'about'), label: dict.nav.about },
+  { href: getLocalizedPath(locale, 'contact'), label: dict.nav.contact },
+];
+
+const homeHref = getLocalizedPath(locale, 'home');
+const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
+const otherLocaleHref = switchLocalePath(pathname, otherLocale);
+const otherLocaleLabel = otherLocale === 'es' ? 'ES' : 'EN';
+
+const mobileLinks = [...lineLinks, ...secondaryLinks];
+---
+
+<header class="sticky top-0 z-40 border-b border-brand-navy/10 bg-surface/90 backdrop-blur-md">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <a href={homeHref} class="flex shrink-0 items-center gap-2.5 rounded-sm">
+      <img
+        src="/logo/appico-logo-transparente.svg"
+        alt="Appico"
+        width="40"
+        height="40"
+        class="h-9 w-9 sm:h-10 sm:w-10"
+      />
+      <span class="font-display text-lg font-semibold tracking-tight text-brand-navy sm:text-xl">
+        Appico
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-1 lg:flex" aria-label={dict.nav.lines}>
+      {
+        lineLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors',
+              pathname === link.href || pathname === `${link.href}/`
+                ? 'text-brand-teal'
+                : 'text-ink-muted hover:text-brand-navy',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <span class="mx-1 h-4 w-px bg-brand-navy/15" aria-hidden="true" />
+      {
+        secondaryLinks.map((link) => (
+          <a
+            href={link.href}
+            class:list={[
+              'rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors',
+              pathname === link.href || pathname === `${link.href}/`
+                ? 'text-brand-teal'
+                : 'text-ink-muted hover:text-brand-navy',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a
+        href={otherLocaleHref}
+        class="ml-2 rounded-sm border border-brand-navy/20 px-2 py-1 text-xs font-semibold tracking-wide text-brand-navy transition-colors hover:border-brand-teal hover:text-brand-teal"
+        hreflang={otherLocale}
+        lang={otherLocale}
+        aria-label={dict.nav.language}
+      >
+        {otherLocaleLabel}
+      </a>
+    </nav>
+
+    <div class="lg:hidden">
+      <MobileNav
+        client:load
+        links={mobileLinks}
+        openLabel={dict.nav.openMenu}
+        closeLabel={dict.nav.closeMenu}
+        localeHref={otherLocaleHref}
+        localeLabel={otherLocaleLabel}
+        languageLabel={dict.nav.language}
+        otherLocale={otherLocale}
+      />
+    </div>
+  </div>
+</header>

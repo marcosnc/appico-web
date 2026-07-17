@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BusinessLineContent from '../../components/pages/BusinessLineContent.astro';
+import { getBusinessLine } from '../../i18n/dictionaries';
+
+const locale = 'en' as const;
+const slug = 'chain' as const;
+const line = getBusinessLine(locale, slug);
+---
+
+<Layout locale={locale} title={line.metaTitle} description={line.metaDescription}>
+  <BusinessLineContent locale={locale} slug={slug} />
+</Layout>

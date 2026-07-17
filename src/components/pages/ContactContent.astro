@@ -1,0 +1,50 @@
+---
+import type { Locale } from '../../i18n/config';
+import { getDictionary } from '../../i18n/dictionaries';
+import ContactForm from '../react/ContactForm';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = getDictionary(locale);
+
+const params = Astro.url.searchParams;
+const initialLine = params.get('linea') ?? params.get('line') ?? '';
+
+/**
+ * Contact form endpoint (Formspree or custom).
+ * Set PUBLIC_CONTACT_FORM_ENDPOINT in .env — see .env.example.
+ * Until replaced, the form validates client-side and shows success without a real POST.
+ */
+const endpoint =
+  import.meta.env.PUBLIC_CONTACT_FORM_ENDPOINT ??
+  'https://formspree.io/f/PLACEHOLDER';
+
+const lineOptions = dict.businessLines.map((line) => ({
+  value: line.slug,
+  label: line.name,
+}));
+---
+
+<section class="border-b border-brand-navy/10 bg-surface-muted">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <h1 class="font-display text-4xl font-bold text-brand-navy sm:text-5xl">
+      {dict.contact.heading}
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-ink-muted">{dict.contact.lead}</p>
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+  <div class="max-w-xl">
+    <ContactForm
+      client:visible
+      labels={dict.contact.form}
+      lines={lineOptions}
+      initialLine={initialLine}
+      endpoint={endpoint}
+    />
+  </div>
+</section>

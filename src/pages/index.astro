@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HomeContent from '../components/pages/HomeContent.astro';
+import { getDictionary } from '../i18n/dictionaries';
+
+const locale = 'es' as const;
+const dict = getDictionary(locale);
+---
+
+<Layout locale={locale} title={dict.home.metaTitle} description={dict.home.metaDescription}>
+  <HomeContent locale={locale} />
+</Layout>

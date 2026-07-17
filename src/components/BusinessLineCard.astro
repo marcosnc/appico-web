@@ -1,0 +1,72 @@
+---
+import type { BusinessLineContent } from '../i18n/dictionaries';
+import type { Locale } from '../i18n/config';
+import { getLocalizedPath } from '../i18n/paths';
+
+interface Props {
+  line: BusinessLineContent;
+  locale: Locale;
+  ctaLabel: string;
+}
+
+const { line, locale, ctaLabel } = Astro.props;
+const href = getLocalizedPath(locale, line.slug);
+
+const accentBorder: Record<BusinessLineContent['accent'], string> = {
+  cyan: 'border-brand-cyan',
+  teal: 'border-brand-teal',
+  mint: 'border-brand-mint',
+  navy: 'border-brand-navy',
+  ink: 'border-brand-ink',
+};
+
+const accentText: Record<BusinessLineContent['accent'], string> = {
+  cyan: 'text-brand-cyan',
+  teal: 'text-brand-teal',
+  mint: 'text-brand-teal',
+  navy: 'text-brand-navy',
+  ink: 'text-brand-navy',
+};
+
+const accentDot: Record<BusinessLineContent['accent'], string> = {
+  cyan: 'bg-brand-cyan',
+  teal: 'bg-brand-teal',
+  mint: 'bg-brand-mint',
+  navy: 'bg-brand-navy',
+  ink: 'bg-brand-ink',
+};
+---
+
+<a
+  href={href}
+  class:list={[
+    'group block border-l-4 bg-surface py-5 pl-5 pr-4 transition-colors hover:bg-surface-muted',
+    accentBorder[line.accent],
+  ]}
+>
+  <div class="flex items-center gap-2">
+    <span class:list={['h-2 w-2 rounded-full', accentDot[line.accent]]} aria-hidden="true" />
+    <h3 class:list={['font-display text-xl font-semibold', accentText[line.accent]]}>
+      {line.name}
+    </h3>
+  </div>
+  <p class="mt-2 text-sm leading-relaxed text-ink-muted">{line.focus}</p>
+  <ul class="mt-3 space-y-1 text-sm text-ink">
+    {
+      line.cardExamples.map((example) => (
+        <li class="flex gap-2">
+          <span class="text-brand-teal" aria-hidden="true">
+            ·
+          </span>
+          <span>{example}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <span
+    class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-navy transition-colors group-hover:text-brand-teal"
+  >
+    {ctaLabel}
+    <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">→</span>
+  </span>
+</a>

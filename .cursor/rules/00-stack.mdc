@@ -1,0 +1,108 @@
+---
+description: Stack tecnológico y reglas generales del proyecto (sitio corporativo estático de Appico.net)
+globs:
+alwaysApply: true
+---
+
+# Contexto del proyecto
+
+Este es un sitio web **corporativo, estático** (sin CMS, sin backend propio por ahora).
+Prioridades en este orden: rendimiento (Core Web Vitals), SEO, accesibilidad, mantenibilidad.
+No sobre-ingenierices: si algo se puede resolver con HTML/CSS simple, no introduzcas JS.
+
+## Stack obligatorio
+
+- **Framework**: Astro (output estático, `output: 'static'` en `astro.config.mjs`).
+- **Lenguaje**: TypeScript en todo el proyecto. Nunca generes archivos `.js` sueltos ni `.jsx`;
+  siempre `.ts` / `.tsx`. No uses `any` salvo justificación explícita en comentario.
+- **Estilos**: Tailwind CSS. No escribas CSS plano salvo casos muy puntuales (ej. `@font-face`,
+  keyframes complejos) y en ese caso ponlo en `src/styles/global.css`.
+- **Interactividad puntual (islands)**: React o Svelte, SOLO cuando el componente realmente
+  necesita estado o interacción en cliente (menú móvil, carrusel, formulario con validación,
+  tabs, acordeones). Todo lo demás debe ser un componente `.astro` (server-rendered, cero JS).
+- **Hosting**: el sitio debe poder desplegarse tanto en Vercel (deploy estático, sin adapter SSR)
+  como en un servidor propio sirviendo el contenido de `dist/` con cualquier servidor
+  estático (nginx, Caddy, etc.). No agregues el adapter `@astrojs/vercel` a menos que se pida
+  explícitamente pasar a SSR/edge functions — mientras el sitio sea estático, no es necesario.
+
+## Estructura de carpetas
+
+```
+src/
+  components/        # Componentes .astro reutilizables (Header, Footer, Card, etc.)
+  components/react/  # Islands en React (.tsx) - solo si son necesarias
+  components/svelte/ # Islands en Svelte (.svelte) - solo si son necesarias
+  layouts/           # Layouts base (Layout.astro, PageLayout.astro)
+  pages/             # Rutas del sitio (una página = un archivo)
+  styles/            # global.css (imports de Tailwind + estilos globales mínimos)
+  content/           # Si hay contenido estructurado (ej. posts, casos de éxito) usar Content Collections
+  assets/            # Imágenes e íconos que pasan por el pipeline de optimización de Astro
+public/              # Archivos estáticos servidos tal cual (favicon, robots.txt, fonts si aplica)
+```
+
+## Convenciones de nombres
+
+- Componentes `.astro`, `.tsx`, `.svelte`: `PascalCase.astro` / `PascalCase.tsx`.
+- Páginas en `src/pages`: `kebab-case.astro` (reflejan la URL final).
+- Nada de nombres genéricos (`Component1.astro`, `Section.astro`) — el nombre debe describir
+  qué es (`HeroSection.astro`, `TeamGrid.astro`, `ContactForm.tsx`).
+
+## Islands: cuándo y cómo hidratar
+
+- Por defecto, un componente en Astro NO se hidrata (cero JS al cliente). Esto es lo que
+  queremos para el 90% del sitio.
+- Cuando un componente necesita JS en cliente, elegí el directive más restrictivo posible:
+  - `client:visible` → contenido interactivo debajo del fold (la mayoría de los casos).
+  - `client:idle` → interactividad no crítica que puede esperar a que el navegador esté libre.
+  - `client:load` → SOLO si la interacción tiene que estar lista inmediatamente al pintar
+    (ej. un menú de navegación que se abre con un click apenas carga la página).
+  - Evitá `client:only` salvo que el componente sea imposible de renderizar en servidor.
+- No mezcles React y Svelte para el mismo tipo de componente. Elegí uno como estándar del
+  proyecto (React si el desarrollador tiene más experiencia ahí) y usá el otro solo en casos
+  excepcionales y justificados.
+
+## TypeScript
+
+- `strict: true` en `tsconfig.json` (Astro ya lo trae por defecto en `astro/tsconfigs/strict`,
+  no lo bajes a `base`).
+- Definí `interface Props { ... }` explícitas en cada componente `.astro` que reciba props.
+- Tipá las props de componentes React/Svelte con interfaces exportadas, no inline gigantes.
+
+## Tailwind
+
+- Mobile-first siempre: escribí primero el estilo base (mobile) y agregá breakpoints
+  (`sm:`, `md:`, `lg:`) para escalar hacia arriba, nunca al revés.
+- No uses `@apply` para reemplazar clases enteras de componentes; solo para patrones muy
+  repetidos (ej. un botón que se repite 10 veces).
+- Configurá el theme (colores, fuentes, spacing) en `tailwind.config.mjs` en vez de usar
+  valores arbitrarios (`bg-[#1a1a1a]`) repetidos por el código. Si un valor arbitrario se
+  usa más de una vez, se convierte en token del theme.
+- Respetá el sistema de diseño definido para el proyecto (ver regla de diseño) en vez de
+  improvisar colores o tamaños de fuente por componente.
+
+## Accesibilidad (no negociable)
+
+- HTML semántico siempre (`<nav>`, `<main>`, `<header>`, `<footer>`, `<button>` vs `<div onClick>`).
+- Todas las imágenes con `alt` descriptivo (o `alt=""` si son puramente decorativas).
+- Foco visible en todos los elementos interactivos (no remuevas el outline sin reemplazarlo).
+- Respetá `prefers-reduced-motion` en cualquier animación.
+- Contraste de color AA como mínimo en texto sobre fondo.
+
+## Rendimiento y SEO
+
+- Usá `astro:assets` (`<Image />`) para toda imagen, nunca `<img>` a pelo con una ruta de
+  `public/`, salvo casos muy específicos.
+- Cada página debe tener `<title>` y `meta description` únicos, definidos vía props del
+  Layout, no hardcodeados iguales en todas las páginas.
+- Generá `sitemap.xml` con `@astrojs/sitemap` y un `robots.txt` en `public/`.
+- Agregá metadatos Open Graph / Twitter Card en el `<head>` del layout base.
+- No agregues librerías de JS pesadas (icon packs completos, animation libraries grandes)
+  para resolver algo que se puede hacer con SVG inline o CSS.
+
+## Git / control de versiones
+
+- Commits en español o inglés (consistente con lo que ya use el repo), formato tipo
+  `feat: agrega sección de equipo`, `fix: corrige contraste en footer`, `chore: ...`.
+- No commitear `node_modules`, `dist/`, ni archivos `.env`.
+- Un componente o feature por PR/commit lógico, no mezclar cambios de estilo con cambios
+  de contenido en el mismo commit si se puede evitar.

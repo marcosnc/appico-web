@@ -1,0 +1,75 @@
+---
+import type { Locale } from '../../i18n/config';
+import { getDictionary } from '../../i18n/dictionaries';
+import { getLocalizedPath } from '../../i18n/paths';
+import LabBranch from '../LabBranch.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = getDictionary(locale);
+const contactHref = getLocalizedPath(locale, 'contact');
+---
+
+<section class="border-b border-brand-navy/10 bg-surface-muted">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <div class="grid items-start gap-10 lg:grid-cols-[1fr_auto]">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-4xl font-bold text-brand-navy sm:text-5xl">
+          {dict.about.heading}
+        </h1>
+        <p class="mt-6 text-lg leading-relaxed text-ink-muted">{dict.about.intro}</p>
+      </div>
+      <LabBranch variant="compact" class="hidden sm:block" />
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+  <h2 class="font-display text-2xl font-semibold text-brand-teal sm:text-3xl">
+    {dict.about.labsHeading}
+  </h2>
+  <p class="mt-4 max-w-3xl text-base leading-relaxed text-ink">{dict.about.labsBody}</p>
+</section>
+
+<section class="bg-surface-muted">
+  <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+    <h2 class="font-display text-2xl font-semibold text-brand-navy sm:text-3xl">
+      {dict.about.linesHeading}
+    </h2>
+    <p class="mt-4 max-w-3xl text-ink-muted">{dict.about.linesLead}</p>
+    <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        dict.businessLines.map((line, index) => (
+          <li class="border-l-2 border-brand-cyan/60 pl-4">
+            <a
+              href={getLocalizedPath(locale, line.slug)}
+              class="font-display text-lg font-semibold text-brand-navy transition-colors hover:text-brand-teal"
+            >
+              {line.name}
+            </a>
+            <p class="mt-2 text-sm text-ink-muted">{line.focus}</p>
+            <LabBranch
+              activeIndex={index}
+              variant="mark"
+              class="mt-4 opacity-80"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+  <h2 class="font-display text-2xl font-semibold text-brand-navy">{dict.about.ctaHeading}</h2>
+  <p class="mt-3 max-w-xl text-ink-muted">{dict.about.ctaLead}</p>
+  <a
+    href={contactHref}
+    class="mt-6 inline-flex rounded-sm bg-brand-navy px-5 py-2.5 text-sm font-semibold text-surface transition-colors hover:bg-brand-teal"
+  >
+    {dict.about.ctaLabel}
+  </a>
+</section>

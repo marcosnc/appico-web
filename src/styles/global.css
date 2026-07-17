@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/*
+  Tailwind CSS v4: theme tokens live here (not in tailwind.config.mjs).
+  Colors sampled from appico-logo-transparente.svg / appico-logo-azul.jpg.
+*/
+
+@theme {
+  /* --- Brand palette --- */
+  --color-brand-ink: #11011e;
+  --color-brand-navy: #0a3057;
+  --color-brand-teal: #24838c;
+  --color-brand-cyan: #38acac;
+  --color-brand-mint: #4fd8cb;
+
+  /* --- Neutrals --- */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f7f8;
+  --color-ink: #0a0d12;
+  --color-ink-muted: #4b5563;
+  --color-danger: #9b1c1c;
+
+  /* --- Typography --- */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --breakpoint-3xl: 120rem;
+}
+
+html {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-surface);
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Lab Branch signature motion */
+@keyframes branch-draw {
+  from {
+    stroke-dashoffset: 240;
+    opacity: 0.35;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lab-branch-path {
+    stroke-dasharray: 240;
+    animation: branch-draw 1.1s ease-out forwards;
+  }
+}

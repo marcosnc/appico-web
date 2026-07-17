@@ -1,0 +1,53 @@
+---
+description: Principios de diseño visual para componentes y estilos del sitio
+globs: ["**/*.astro", "**/*.tsx", "**/*.svelte", "**/*.css", "tailwind.config.*"]
+alwaysApply: false
+---
+
+# Diseño visual
+
+El objetivo es un sitio con identidad propia, no un template genérico. Antes de generar
+componentes visuales nuevos (hero, secciones, cards), definí (o respetá si ya existe) un
+sistema de diseño concreto para esta empresa: paleta con 4-6 colores nombrados en hex,
+tipografía (una fuente display + una de texto, usadas con consistencia), y un layout
+concept propio. Todo color y tamaño de fuente debe salir de ese sistema (definido en
+`tailwind.config.mjs`), no improvisado componente a componente.
+
+## Evitá los defaults típicos de diseño generado por IA
+
+Salvo que el brief de la empresa pida explícitamente uno de estos looks, evitá caer por
+default en:
+- Fondo crema (~#F4F1EA) + serif de alto contraste + acento terracota (~#D97757).
+- Fondo casi negro + un único acento verde ácido o vermillion.
+- Layout tipo "broadsheet": líneas finas, cero border-radius, columnas densas tipo diario.
+
+Son válidos si el proyecto realmente lo pide, pero no deben aparecer solo porque son el
+camino de menor resistencia.
+
+## Principios
+
+- **Un elemento con personalidad, todo lo demás disciplinado.** No hidrates de intención
+  cada sección; elegí un elemento "firma" (podría ser el hero, un patrón gráfico, una
+  transición) y mantené el resto sobrio y consistente.
+- **La tipografía comunica marca.** Definí una escala tipográfica clara (tamaños, pesos)
+  y usala igual en todo el sitio — nada de tamaños de fuente ad-hoc por componente.
+- **La estructura debe significar algo.** Si usás numeración (01 / 02 / 03) o timelines,
+  que sea porque el contenido es realmente una secuencia, no decoración.
+- **Motion con propósito.** Si hay animación (scroll-reveal, hover states), que sea
+  deliberada y coherente con la marca, no un efecto suelto por sección. Ante la duda,
+  menos animación es mejor — el exceso de motion es una de las señales más claras de
+  que un sitio "se ve generado por IA".
+- **Copy como material de diseño.** Los textos (headers, CTAs, microcopy) deben ser
+  específicos de la empresa y su contenido real, no placeholder genérico tipo "Lorem
+  ipsum" ni frases de marketing vacías ("Soluciones innovadoras para tu negocio").
+  Voz activa, específica, en el lenguaje del usuario final ("Contactanos" en vez de
+  "Enviar solicitud de contacto").
+
+## Checklist antes de dar por terminado un componente visual
+
+- ¿Funciona bien en mobile (375px) sin scroll horizontal ni texto cortado?
+- ¿El foco de teclado es visible y sigue un orden lógico?
+- ¿Los colores y tipografías usados están definidos en `tailwind.config.mjs` (no valores
+  arbitrarios sueltos)?
+- ¿Se ve distinto a "cualquier landing genérica" o hay al menos una decisión de diseño
+  específica de esta empresa?

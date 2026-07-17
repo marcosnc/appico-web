@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactContent from '../components/pages/ContactContent.astro';
+import { getDictionary } from '../i18n/dictionaries';
+
+const locale = 'es' as const;
+const dict = getDictionary(locale);
+---
+
+<Layout locale={locale} title={dict.contact.metaTitle} description={dict.contact.metaDescription}>
+  <ContactContent locale={locale} />
+</Layout>
