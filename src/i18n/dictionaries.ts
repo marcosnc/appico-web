@@ -39,6 +39,8 @@ export interface Dictionary {
     closeMenu: string;
     lines: string;
     language: string;
+    themeToLight: string;
+    themeToDark: string;
   };
   home: {
     metaTitle: string;
@@ -468,6 +470,8 @@ const es: Dictionary = {
     closeMenu: 'Cerrar menú',
     lines: 'Líneas de negocio',
     language: 'Idioma',
+    themeToLight: 'Cambiar a modo día',
+    themeToDark: 'Cambiar a modo noche',
   },
   home: {
     metaTitle: 'Appico — Evolving Labs',
@@ -550,6 +554,8 @@ const en: Dictionary = {
     closeMenu: 'Close menu',
     lines: 'Business lines',
     language: 'Language',
+    themeToLight: 'Switch to light mode',
+    themeToDark: 'Switch to dark mode',
   },
   home: {
     metaTitle: 'Appico — Evolving Labs',

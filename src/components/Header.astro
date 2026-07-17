@@ -3,6 +3,7 @@ import type { Locale } from '../i18n/config';
 import { getDictionary } from '../i18n/dictionaries';
 import { getLocalizedPath, switchLocalePath } from '../i18n/paths';
 import MobileNav from './react/MobileNav';
+import ThemeToggle from './react/ThemeToggle';
 
 interface Props {
   locale: Locale;
@@ -45,60 +46,65 @@ const mobileLinks = [...lineLinks, ...secondaryLinks];
       </span>
     </a>
 
-    <nav class="hidden items-center gap-1 lg:flex" aria-label={dict.nav.lines}>
-      {
-        lineLinks.map((link) => (
-          <a
-            href={link.href}
-            class:list={[
-              'rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors',
-              pathname === link.href || pathname === `${link.href}/`
-                ? 'text-brand-teal'
-                : 'text-ink-muted hover:text-brand-navy',
-            ]}
-          >
-            {link.label}
-          </a>
-        ))
-      }
-      <span class="mx-1 h-4 w-px bg-brand-navy/15" aria-hidden="true" />
-      {
-        secondaryLinks.map((link) => (
-          <a
-            href={link.href}
-            class:list={[
-              'rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors',
-              pathname === link.href || pathname === `${link.href}/`
-                ? 'text-brand-teal'
-                : 'text-ink-muted hover:text-brand-navy',
-            ]}
-          >
-            {link.label}
-          </a>
-        ))
-      }
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <nav class="hidden items-center gap-1 lg:flex" aria-label={dict.nav.lines}>
+        {
+          lineLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors',
+                pathname === link.href || pathname === `${link.href}/`
+                  ? 'text-brand-teal'
+                  : 'text-ink-muted hover:text-brand-navy',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+        <span class="mx-1 h-4 w-px bg-brand-navy/15" aria-hidden="true" />
+        {
+          secondaryLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-sm px-2.5 py-1.5 text-sm font-medium transition-colors',
+                pathname === link.href || pathname === `${link.href}/`
+                  ? 'text-brand-teal'
+                  : 'text-ink-muted hover:text-brand-navy',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <ThemeToggle
+        client:load
+        labelLight={dict.nav.themeToLight}
+        labelDark={dict.nav.themeToDark}
+      />
+
       <a
         href={otherLocaleHref}
-        class="ml-2 rounded-sm border border-brand-navy/20 px-2 py-1 text-xs font-semibold tracking-wide text-brand-navy transition-colors hover:border-brand-teal hover:text-brand-teal"
+        class="inline-flex h-8 items-center rounded-sm border border-brand-navy/20 px-2 text-xs font-semibold tracking-wide text-brand-navy transition-colors hover:border-brand-teal hover:text-brand-teal"
         hreflang={otherLocale}
         lang={otherLocale}
         aria-label={dict.nav.language}
       >
         {otherLocaleLabel}
       </a>
-    </nav>
 
-    <div class="lg:hidden">
-      <MobileNav
-        client:load
-        links={mobileLinks}
-        openLabel={dict.nav.openMenu}
-        closeLabel={dict.nav.closeMenu}
-        localeHref={otherLocaleHref}
-        localeLabel={otherLocaleLabel}
-        languageLabel={dict.nav.language}
-        otherLocale={otherLocale}
-      />
+      <div class="lg:hidden">
+        <MobileNav
+          client:load
+          links={mobileLinks}
+          openLabel={dict.nav.openMenu}
+          closeLabel={dict.nav.closeMenu}
+        />
+      </div>
     </div>
   </div>
 </header>

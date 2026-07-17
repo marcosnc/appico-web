@@ -5,6 +5,8 @@
   Colors sampled from appico-logo-transparente.svg / appico-logo-azul.jpg.
 */
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* --- Brand palette --- */
   --color-brand-ink: #11011e;
@@ -19,12 +21,31 @@
   --color-ink: #0a0d12;
   --color-ink-muted: #4b5563;
   --color-danger: #9b1c1c;
+  /* Text on dark brand panels (footer) — stable across themes */
+  --color-on-inverse: #eef5f5;
 
   /* --- Typography --- */
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 
   --breakpoint-3xl: 120rem;
+}
+
+/* Night mode — same brand family, inverted surfaces */
+html.dark {
+  --color-surface: #0a1118;
+  --color-surface-muted: #121b24;
+  --color-ink: #e8f1f5;
+  --color-ink-muted: #93a8b6;
+  /* Lighter navy so headings/links stay readable on dark surfaces;
+     buttons using bg-brand-navy + text-surface keep contrast (dark text on light navy). */
+  --color-brand-navy: #9ec9dc;
+  --color-brand-teal: #45b8bf;
+  --color-brand-cyan: #56c8c8;
+  --color-brand-mint: #6fdfd2;
+  --color-brand-ink: #06040c;
+  --color-danger: #f07178;
+  color-scheme: dark;
 }
 
 html {
@@ -59,6 +80,21 @@ h4 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Hero atmosphere — light vs dark */
+.hero-atmosphere {
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(79, 216, 203, 0.35), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(56, 172, 172, 0.28), transparent 50%),
+    linear-gradient(165deg, #e6f6f4 0%, #f5fbfb 42%, #ffffff 100%);
+}
+
+html.dark .hero-atmosphere {
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(79, 216, 203, 0.18), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(56, 172, 172, 0.14), transparent 50%),
+    linear-gradient(165deg, #0c1820 0%, #0a1118 45%, #0a1118 100%);
 }
 
 /* --- Appico logo: illuminate internal shards (same animation on every page) --- */
@@ -100,6 +136,16 @@ h4 {
   }
 }
 
+@keyframes logo-shard-glow-dark {
+  0%,
+  100% {
+    filter: brightness(1.05) saturate(1.05);
+  }
+  40% {
+    filter: brightness(1.45) saturate(1.2);
+  }
+}
+
 /* Opacity + scale only — never touch `transform`, so Tailwind centering stays put */
 @keyframes glow-breathe {
   0%,
@@ -131,8 +177,13 @@ h4 {
       logo-shard-glow 0.7s ease-out calc(var(--gi, 0) * 18ms + 0.2s);
   }
 
+  html.dark .logo-shard {
+    animation:
+      logo-shard-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--gi, 0) * 18ms) forwards,
+      logo-shard-glow-dark 0.7s ease-out calc(var(--gi, 0) * 18ms + 0.2s);
+  }
+
   .lab-glow {
-    /* Start breathing immediately so position/opacity never “kick in” mid-animation */
     animation: glow-breathe 5.5s ease-in-out infinite;
   }
 

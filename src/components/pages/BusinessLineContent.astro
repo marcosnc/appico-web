@@ -14,11 +14,11 @@ const { locale, slug } = Astro.props;
 const line = getBusinessLine(locale, slug);
 
 const accentHeroBg: Record<typeof line.accent, string> = {
-  cyan: 'from-brand-cyan/25 via-[#e8f7f6] to-surface',
-  teal: 'from-brand-teal/22 via-[#e8f5f4] to-surface',
-  mint: 'from-brand-mint/30 via-[#eafaf7] to-surface',
-  navy: 'from-brand-navy/15 via-[#e8eef4] to-surface',
-  ink: 'from-brand-ink/12 via-[#eee8f2] to-surface',
+  cyan: 'from-brand-cyan/25 via-surface-muted to-surface',
+  teal: 'from-brand-teal/22 via-surface-muted to-surface',
+  mint: 'from-brand-mint/30 via-surface-muted to-surface',
+  navy: 'from-brand-navy/15 via-surface-muted to-surface',
+  ink: 'from-brand-ink/40 via-surface-muted to-surface',
 };
 
 const accentName: Record<typeof line.accent, string> = {

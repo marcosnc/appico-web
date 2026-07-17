@@ -9,21 +9,9 @@ export interface MobileNavProps {
   links: MobileNavLink[];
   openLabel: string;
   closeLabel: string;
-  localeHref: string;
-  localeLabel: string;
-  languageLabel: string;
-  otherLocale: string;
 }
 
-export default function MobileNav({
-  links,
-  openLabel,
-  closeLabel,
-  localeHref,
-  localeLabel,
-  languageLabel,
-  otherLocale,
-}: MobileNavProps) {
+export default function MobileNav({ links, openLabel, closeLabel }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -49,13 +37,13 @@ export default function MobileNav({
     <>
       <button
         type="button"
-        className="inline-flex items-center justify-center rounded-sm border border-brand-navy/20 p-2 text-brand-navy transition-colors hover:border-brand-teal hover:text-brand-teal"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-sm border border-brand-navy/20 text-brand-navy transition-colors hover:border-brand-teal hover:text-brand-teal"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen(true)}
       >
         <span className="sr-only">{openLabel}</span>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
             d="M4 7h16M4 12h16M4 17h16"
             stroke="currentColor"
@@ -69,7 +57,7 @@ export default function MobileNav({
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
           <button
             type="button"
-            className="absolute inset-0 bg-brand-ink/40"
+            className="absolute inset-0 bg-brand-ink/50"
             aria-label={closeLabel}
             onClick={() => setOpen(false)}
           />
@@ -82,11 +70,11 @@ export default function MobileNav({
               <button
                 ref={closeBtnRef}
                 type="button"
-                className="rounded-sm border border-brand-navy/20 p-2 text-brand-navy"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-sm border border-brand-navy/20 text-brand-navy"
                 onClick={() => setOpen(false)}
               >
                 <span className="sr-only">{closeLabel}</span>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M6 6l12 12M18 6L6 18"
                     stroke="currentColor"
@@ -107,16 +95,6 @@ export default function MobileNav({
                   {link.label}
                 </a>
               ))}
-              <a
-                href={localeHref}
-                className="mt-4 rounded-sm border border-brand-navy/20 px-3 py-2.5 text-sm font-semibold text-brand-navy"
-                hreflang={otherLocale}
-                lang={otherLocale}
-                aria-label={languageLabel}
-                onClick={() => setOpen(false)}
-              >
-                {localeLabel}
-              </a>
             </nav>
           </div>
         </div>
