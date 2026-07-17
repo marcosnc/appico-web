@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import type { BusinessLineSlug } from '../../i18n/paths';
 
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+
 export interface ContactFormLabels {
   name: string;
   email: string;
@@ -26,8 +28,10 @@ export interface ContactFormProps {
   lines: ContactFormLineOption[];
   /** Pre-select line from ?linea= / ?line= query */
   initialLine?: string;
-  /** Formspree (or similar) endpoint — replace PLACEHOLDER before go-live */
-  endpoint: string;
+  /** Web3Forms access key (safe to expose in the client) */
+  accessKey: string;
+  /** Email subject line */
+  subject?: string;
 }
 
 function isValidEmail(value: string): boolean {
@@ -38,13 +42,15 @@ export default function ContactForm({
   labels,
   lines,
   initialLine = '',
-  endpoint,
+  accessKey,
+  subject = 'Nuevo mensaje desde appico.net',
 }: ContactFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [message, setMessage] = useState('');
   const [line, setLine] = useState(initialLine);
+  const [botcheck, setBotcheck] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
@@ -63,38 +69,42 @@ export default function ContactForm({
     event.preventDefault();
     if (!validate()) return;
 
-    // Endpoint placeholder: swap PUBLIC_CONTACT_FORM_ENDPOINT / Formspree ID before production.
-    if (endpoint.includes('PLACEHOLDER')) {
-      console.warn(
-        '[ContactForm] Replace PUBLIC_CONTACT_FORM_ENDPOINT (Formspree or custom URL) before go-live.',
-      );
+    // Honeypot: bots that fill hidden fields are dropped silently.
+    if (botcheck) {
       setStatus('success');
-      setName('');
-      setEmail('');
-      setCompany('');
-      setMessage('');
-      setLine('');
+      return;
+    }
+
+    if (!accessKey) {
+      console.error('[ContactForm] Missing Web3Forms access key.');
+      setStatus('error');
       return;
     }
 
     setStatus('sending');
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
+          access_key: accessKey,
+          subject,
+          from_name: 'Appico web',
           name: name.trim(),
           email: email.trim(),
           company: company.trim(),
           message: message.trim(),
-          line: line || undefined,
+          line: line || '—',
+          botcheck: false,
         }),
       });
 
-      if (!response.ok) throw new Error('Request failed');
+      const result = (await response.json()) as { success?: boolean };
+      if (!response.ok || !result.success) throw new Error('Request failed');
+
       setStatus('success');
       setName('');
       setEmail('');
@@ -112,6 +122,18 @@ export default function ContactForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
+      {/* Web3Forms spam honeypot — must stay hidden */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+        checked={botcheck}
+        onChange={(e) => setBotcheck(e.target.checked)}
+        aria-hidden="true"
+      />
+
       <div>
         <label htmlFor="contact-name" className={labelClass}>
           {labels.name} <span className="text-brand-teal">*</span>

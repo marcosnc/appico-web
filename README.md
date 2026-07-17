@@ -18,9 +18,11 @@ npm run preview
 
 La salida queda en `dist/` (hosteable en Vercel estático o cualquier servidor de archivos).
 
-## Contacto / Formspree
+## Contacto / Web3Forms
 
-Copiá `.env.example` a `.env` y reemplazá `PUBLIC_CONTACT_FORM_ENDPOINT` por tu endpoint real (Formspree u otro). Mientras figure `PLACEHOLDER`, el formulario valida en cliente y simula éxito sin enviar.
+El formulario envía a [Web3Forms](https://web3forms.com/) (`https://api.web3forms.com/submit`).
+
+La access key vive en `PUBLIC_WEB3FORMS_ACCESS_KEY` (ver `.env.example`). Es pública por diseño; en el dashboard de Web3Forms conviene restringir el dominio permitido.
 
 ## Idiomas
 

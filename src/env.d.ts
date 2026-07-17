@@ -1,7 +1,7 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-  readonly PUBLIC_CONTACT_FORM_ENDPOINT?: string;
+  readonly PUBLIC_WEB3FORMS_ACCESS_KEY?: string;
 }
 
 interface ImportMeta {

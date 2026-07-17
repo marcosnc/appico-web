@@ -14,13 +14,17 @@ const params = Astro.url.searchParams;
 const initialLine = params.get('linea') ?? params.get('line') ?? '';
 
 /**
- * Contact form endpoint (Formspree or custom).
- * Set PUBLIC_CONTACT_FORM_ENDPOINT in .env — see .env.example.
- * Until replaced, the form validates client-side and shows success without a real POST.
+ * Web3Forms access key — safe to expose in the client.
+ * Override with PUBLIC_WEB3FORMS_ACCESS_KEY in .env if needed.
  */
-const endpoint =
-  import.meta.env.PUBLIC_CONTACT_FORM_ENDPOINT ??
-  'https://formspree.io/f/PLACEHOLDER';
+const accessKey =
+  import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ??
+  '8ee9c464-a97e-4542-a910-7901e190a4c6';
+
+const subject =
+  locale === 'es'
+    ? 'Nuevo mensaje desde appico.net'
+    : 'New message from appico.net';
 
 const lineOptions = dict.businessLines.map((line) => ({
   value: line.slug,
@@ -44,7 +48,8 @@ const lineOptions = dict.businessLines.map((line) => ({
       labels={dict.contact.form}
       lines={lineOptions}
       initialLine={initialLine}
-      endpoint={endpoint}
+      accessKey={accessKey}
+      subject={subject}
     />
   </div>
 </section>
